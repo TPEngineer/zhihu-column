@@ -1,5 +1,6 @@
 <template>
   <div id="nav">
+    <a-button>试试看</a-button>
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link>
   </div>
