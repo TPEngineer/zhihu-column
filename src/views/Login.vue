@@ -2,7 +2,7 @@
   <a-row class="container" type="flex" justify="space-around" align="middle">
     <a-form layout="vertical" :model="formInline" @submit="handleSubmit">
       <a-form-item>
-        <a-input v-model:value="formInline.user" placeholder="用户名">
+        <a-input v-model:value="formInline.username" placeholder="用户名">
           <template #prefix
             ><UserOutlined style="color: rgba(0, 0, 0, 0.25)"
           /></template>
@@ -23,7 +23,7 @@
         <a-button
           type="primary"
           html-type="submit"
-          :disabled="formInline.user === '' || formInline.password === ''"
+          :disabled="formInline.username === '' || formInline.password === ''"
         >
           Log in
         </a-button>
@@ -34,25 +34,28 @@
 
 <script>
 import { UserOutlined, LockOutlined } from "@ant-design/icons-vue";
-
+import service from "@/utils/request";
 export default {
   components: {
     UserOutlined,
-    LockOutlined,
+    LockOutlined
   },
   data() {
     return {
       formInline: {
-        user: "",
-        password: "",
-      },
+        username: "",
+        password: ""
+      }
     };
   },
   methods: {
-    handleSubmit() {
+    async handleSubmit() {
       console.log(this.formInline);
-    },
-  },
+      const token = await service.post("/user/login", this.formInline);
+      localStorage.setItem("token", token);
+      this.$router.push("/");
+    }
+  }
 };
 </script>
 
