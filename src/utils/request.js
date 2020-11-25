@@ -43,7 +43,7 @@ service.interceptors.response.use(
     if (res.code !== 0) {
       message.error({
         content: res.msg || "Error",
-        duration: 5 * 1000
+        duration: 2
       });
 
       // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
@@ -59,9 +59,10 @@ service.interceptors.response.use(
   error => {
     console.log("err" + error); // for debug
     message.error({
-      content: error.message || "Error"
+      content: error.message || "Error",
+      duration: 2
     });
-    return Promise.resolve(error);
+    return Promise.reject(error);
   }
 );
 

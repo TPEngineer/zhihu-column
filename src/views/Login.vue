@@ -1,6 +1,6 @@
 <template>
   <a-row class="container" type="flex" justify="space-around" align="middle">
-    <a-form layout="vertical" :model="formInline" @submit="handleSubmit">
+    <a-form :model="formInline" @submit="handleSubmit">
       <a-form-item>
         <a-input v-model:value="formInline.username" placeholder="用户名">
           <template #prefix

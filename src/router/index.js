@@ -28,4 +28,20 @@ const router = createRouter({
   routes
 });
 
+const whiteList = ["/login"]; // no redirect whitelist
+
+router.beforeEach(async (to, from, next) => {
+  const token = localStorage.getItem("token");
+  if (token == null) {
+    if (whiteList.indexOf(to.path) !== -1) {
+      // in the free login whitelist, go directly
+      next();
+    } else {
+      // other pages that do not have permission to access are redirected to the login page.
+      next("/login");
+    }
+  }
+  next();
+});
+
 export default router;
