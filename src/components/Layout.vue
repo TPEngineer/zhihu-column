@@ -2,9 +2,9 @@
   <a-layout
     id="components-layout-demo-top"
     class="layout"
-    :style="{ height: '100vh' }"
+    :style="{ minHeight: '100vh' }"
   >
-    <a-layout-header style="background: white">
+    <a-layout-header style="background: #f0f4f7">
       <div :style="{ float: 'left' }">知乎专栏</div>
       <div :style="{ lineHeight: '64px', float: 'right' }">
         <a-button type="primary">登陆 </a-button>
@@ -13,7 +13,7 @@
         </a-button>
       </div>
     </a-layout-header>
-    <a-layout-content :style="{ padding: '50px' }">
+    <a-layout-content>
       <div :style="{ background: '#fff', padding: '24px' }">
         <router-view />
       </div>
@@ -30,5 +30,4 @@ export default {
   }
 };
 </script>
-<style>
-</style>
+<style></style>
