@@ -5,10 +5,15 @@
     :style="{ minHeight: '100vh' }"
   >
     <a-layout-header style="background: #f0f4f7">
-      <div :style="{ float: 'left' }">知乎专栏</div>
+      <h3 :style="{ float: 'left', fontWeight: 750 }">知乎专栏</h3>
       <div :style="{ lineHeight: '64px', float: 'right' }">
-        <a-button type="primary">登陆 </a-button>
-        <a-button type="primary" :style="{ marginLeft: '12px' }"
+        <a-button type="primary" @click="$router.push('/login')"
+          >登陆
+        </a-button>
+        <a-button
+          type="primary"
+          @click="$router.push('/signup')"
+          :style="{ marginLeft: '12px' }"
           >注册
         </a-button>
       </div>
@@ -25,9 +30,7 @@
 </template>
 <script>
 export default {
-  data() {
-    return { selectedKeys: ["2"] };
-  }
+  methods: {}
 };
 </script>
 <style></style>

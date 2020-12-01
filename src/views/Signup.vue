@@ -56,17 +56,14 @@ export default {
       formInline: {
         username: "",
         password: "",
-        confirmPassword: "",
+        confirmPassword: ""
       }
     };
   },
   methods: {
     async handleSubmit() {
-      console.log(this.formInline);
-      const res = await service.post("/user/signup", this.formInline);
-      if (res.code == 0) {
-        this.$router.push("/login");
-      }
+      await service.post("/user/signup", this.formInline);
+      this.$router.push("/login");
     }
   }
 };
