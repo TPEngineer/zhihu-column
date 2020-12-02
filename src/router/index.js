@@ -52,8 +52,9 @@ router.beforeEach(async (to, from, next) => {
       // other pages that do not have permission to access are redirected to the login page.
       next("/login");
     }
+  } else {
+    next();
   }
-  next();
 });
 
 export default router;
