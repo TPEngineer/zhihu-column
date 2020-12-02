@@ -47,7 +47,8 @@ service.interceptors.response.use(
       });
 
       // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
+      if (res.code === 401 || res.code === 50012 || res.code === 50014) {
+        console.log("401");
         localStorage.removeItem("token");
         location.reload();
       }
@@ -57,7 +58,12 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log("err" + error); // for debug
+    console.log(error.response); // for debug
+    if (error.response.status == 401) {
+      console.log("401");
+      localStorage.removeItem("token");
+      location.reload();
+    }
     message.error({
       content: error.message || "Error",
       duration: 2

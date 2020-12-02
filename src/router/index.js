@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import Home from "../views/Home.vue";
 import Layout from "../components/Layout.vue";
+import store from "../store";
 const routes = [
   {
     path: "/",
@@ -40,7 +41,7 @@ const router = createRouter({
   routes
 });
 
-const whiteList = ["/login"]; // no redirect whitelist
+const whiteList = ["/login", "/home"]; // no redirect whitelist
 
 router.beforeEach(async (to, from, next) => {
   const token = localStorage.getItem("token");
@@ -53,6 +54,7 @@ router.beforeEach(async (to, from, next) => {
       next("/login");
     }
   } else {
+    store.dispatch("fetchUserDetail");
     next();
   }
 });

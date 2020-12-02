@@ -1,14 +1,22 @@
 import { createStore } from "vuex";
+import service from "@/utils/request";
 
 export default createStore({
   state: {
-    isLogin: false
+    isLogin: false,
+    userDetail:{}
   },
   mutations: {
-    setLogin(state) {
+    setLogin(state, userDetail) {
       state.isLogin = true;
+      state.userDetail = userDetail;
     }
   },
-  actions: {},
+  actions: {
+    async fetchUserDetail({ commit }) {
+      const res = await service.post("/user/detail");
+      commit("setLogin",res.data);
+    }
+  },
   modules: {}
 });

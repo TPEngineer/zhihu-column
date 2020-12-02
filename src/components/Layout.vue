@@ -6,7 +6,10 @@
   >
     <a-layout-header style="background: #f0f4f7">
       <h3 :style="{ float: 'left', fontWeight: 750 }">知乎专栏</h3>
-      <div :style="{ lineHeight: '64px', float: 'right' }">
+      <div
+        :style="{ lineHeight: '64px', float: 'right' }"
+        v-if="!$store.state.isLogin"
+      >
         <a-button type="primary" @click="$router.push('/login')"
           >登陆
         </a-button>
@@ -33,4 +36,3 @@ export default {
   methods: {}
 };
 </script>
-<style></style>
