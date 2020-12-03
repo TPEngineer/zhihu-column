@@ -20,6 +20,21 @@
           >注册
         </a-button>
       </div>
+      <div :style="{ lineHeight: '64px', float: 'right' }" v-else>
+        <a-dropdown>
+          <a> 我的 <UserOutlined /> </a>
+          <template #overlay>
+            <a-menu>
+              <a-menu-item @click="$router.push('/user/detail')">
+                <a href="javascript:;">个人信息</a>
+              </a-menu-item>
+              <a-menu-item @click="$router.push('/column')">
+                <a href="javascript:;">我的专栏</a>
+              </a-menu-item>
+            </a-menu>
+          </template>
+        </a-dropdown>
+      </div>
     </a-layout-header>
     <a-layout-content>
       <div :style="{ background: '#fff', padding: '24px' }">
@@ -32,7 +47,13 @@
   </a-layout>
 </template>
 <script>
+import { UserOutlined,  } from '@ant-design/icons-vue';
+
 export default {
+  components: {
+    UserOutlined,
+
+  },
   methods: {}
 };
 </script>
