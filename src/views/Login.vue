@@ -50,7 +50,6 @@ export default {
   },
   methods: {
     async handleSubmit() {
-      console.log(this.formInline);
       const token = await service.post("/user/login", this.formInline);
       localStorage.setItem("token", token);
       this.$router.push("/");

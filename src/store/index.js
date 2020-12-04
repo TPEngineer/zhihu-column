@@ -4,7 +4,9 @@ import service from "@/utils/request";
 export default createStore({
   state: {
     isLogin: false,
-    userDetail:{}
+    userDetail: {
+      avatar: ""
+    }
   },
   mutations: {
     setLogin(state, userDetail) {
@@ -15,7 +17,7 @@ export default createStore({
   actions: {
     async fetchUserDetail({ commit }) {
       const res = await service.post("/user/detail");
-      commit("setLogin",res.data);
+      commit("setLogin", res);
     }
   },
   modules: {}

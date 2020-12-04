@@ -5,7 +5,12 @@
     :style="{ minHeight: '100vh' }"
   >
     <a-layout-header style="background: #f0f4f7">
-      <h3 :style="{ float: 'left', fontWeight: 750 }">知乎专栏</h3>
+      <a
+        :style="{ float: 'left', fontWeight: 750 }"
+        @click="$router.push('/home')"
+      >
+        知乎专栏
+      </a>
       <div
         :style="{ lineHeight: '64px', float: 'right' }"
         v-if="!$store.state.isLogin"
@@ -22,7 +27,7 @@
       </div>
       <div :style="{ lineHeight: '64px', float: 'right' }" v-else>
         <a-dropdown>
-          <a> 我的 <UserOutlined /> </a>
+          <a> {{ userDetail.nickname }} <UserOutlined /> </a>
           <template #overlay>
             <a-menu>
               <a-menu-item @click="$router.push('/user/detail')">
@@ -36,10 +41,10 @@
         </a-dropdown>
       </div>
     </a-layout-header>
-    <a-layout-content>
-      <div :style="{ background: '#fff', padding: '24px' }">
-        <router-view />
-      </div>
+    <a-layout-content
+      :style="{ background: '#fff', padding: '24px', height: '100%' }"
+    >
+      <router-view />
     </a-layout-content>
     <a-layout-footer style="text-align: center">
       Ant Design ©2018 Created by Ant UED
@@ -47,13 +52,20 @@
   </a-layout>
 </template>
 <script>
-import { UserOutlined,  } from '@ant-design/icons-vue';
+import { UserOutlined } from "@ant-design/icons-vue";
+import { computed } from "vue";
+import { useStore } from "vuex";
 
 export default {
   components: {
-    UserOutlined,
-
+    UserOutlined
   },
-  methods: {}
+  setup() {
+    const store = useStore();
+    return {
+      // access a state in computed function
+      userDetail: computed(() => store.state.userDetail)
+    };
+  }
 };
 </script>
