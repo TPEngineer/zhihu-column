@@ -74,7 +74,7 @@ export default {
         await service.post("/column/modify", column.value);
         message.success("修改成功");
       }
-      await getColumnList(1)
+      await getColumnList(1);
       visible.value = false;
     };
     const handleModify = async item => {
