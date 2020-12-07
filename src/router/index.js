@@ -66,6 +66,7 @@ router.beforeEach(async (to, from, next) => {
     }
   } else {
     await store.dispatch("fetchUserDetail");
+    await store.dispatch("fetchColumnAll");
     next();
   }
 });

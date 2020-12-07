@@ -15,10 +15,14 @@
     </a-form>
   </a-modal>
   <a-row :gutter="16" :style="{ marginTop: '24px' }">
-    <a-col :span="6" v-for="item in columnList" :key="item.id">
+    <a-col :span="6" v-for="item in columnAll" :key="item.ID">
       <a-card hoverable>
         <template #cover>
-          <img alt="example" :src="item.cover" />
+          <img
+            alt="example"
+            :src="item.cover"
+            @click="pushWithQuery(item.ID)"
+          />
         </template>
 
         <a-card-meta :title="item.title" :description="item.description">
@@ -39,9 +43,10 @@
 
 <script>
 import service from "@/utils/request";
-import { onMounted, ref, computed } from "vue";
+import { ref, computed } from "vue";
 import { message } from "ant-design-vue";
-
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 export default {
   setup() {
     let column = ref({
@@ -74,7 +79,7 @@ export default {
         await service.post("/column/modify", column.value);
         message.success("修改成功");
       }
-      await getColumnList(1);
+      await getcolumnAll();
       visible.value = false;
     };
     const handleModify = async item => {
@@ -88,15 +93,23 @@ export default {
       visible.value = true;
     };
 
-    const columnList = ref([]);
-    const getColumnList = async page => {
-      const res = await service.post("/column/list", { page });
-      columnList.value = res;
+    const store = useStore();
+    const columnAll = computed(() => store.state.columnAll);
+    const getcolumnAll = () => store.dispatch("fetchColumnAll");
+    // onMounted(getcolumnAll);
+
+    const router = useRouter();
+    const pushWithQuery = column_id => {
+      router.push({
+        path: "/article/list",
+        query: {
+          column_id
+        }
+      });
     };
-    onMounted(getColumnList(1));
     return {
-      columnList,
-      getColumnList,
+      columnAll,
+      getcolumnAll,
       column,
       labelCol: { span: 4 },
       wrapperCol: { span: 14 },
@@ -105,7 +118,8 @@ export default {
       formTitle,
       showModal,
       handleModify,
-      handleOK
+      handleOK,
+      pushWithQuery
     };
   }
 };

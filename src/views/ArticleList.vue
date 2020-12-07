@@ -15,22 +15,29 @@
         <a-avatar :src="article.header_image" size="large" />
       </a-form-item>
       <a-form-item label="专栏">
-        <a-input v-model:value="article.column_id" />
+        <a-select
+          v-model:value="article.column_id"
+          placeholder="please select your zone"
+          :disabled="isEdit"
+        >
+          <a-select-option
+            v-for="item in columnAll"
+            :value="item.ID"
+            :key="item.ID"
+          >
+            {{ item.title }}
+          </a-select-option>
+        </a-select>
       </a-form-item>
       <a-form-item label="文章id" v-if="isEdit">
-        <a-textarea v-model:value="article.article_id" />
+        <a-input v-model:value="article.article_id" disabled />
       </a-form-item>
     </a-form>
   </a-modal>
   <a-row type="flex" justify="center">
     <a-col :md="16">
       <a-button type="primary" @click="showModal">写文章 </a-button>
-      <a-list
-        item-layout="vertical"
-        size="large"
-        :pagination="pagination"
-        :data-source="listData"
-      >
+      <a-list item-layout="vertical" size="large" :data-source="articleList">
         <template #renderItem="{ item }">
           <a-list-item key="item.title">
             <template #actions>
@@ -38,23 +45,21 @@
                 <component v-bind:is="type" style="margin-right: 8px" />
                 {{ text }}
               </span>
+              <span @click="handleModify(item)">修改</span>
             </template>
             <template #extra>
-              <img
-                width="272"
-                alt="logo"
-                src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png"
-              />
+              <img width="272" alt="logo" :src="item.header_image" />
             </template>
-            <a-list-item-meta :description="item.description">
+            <a-list-item-meta>
               <template #title>
-                <a :href="item.href">{{ item.title }}</a>
+                <a>{{ item.title }}</a>
               </template>
             </a-list-item-meta>
-            {{ item.content }}
+            {{ item.short }}
           </a-list-item>
         </template>
       </a-list>
+      <a-pagination v-model:current="current" :total="500" />
     </a-col>
   </a-row>
 </template>
@@ -65,19 +70,12 @@ import {
   LikeOutlined,
   MessageOutlined
 } from "@ant-design/icons-vue";
-import { ref, computed } from "vue";
-const listData = [];
-for (let i = 0; i < 23; i++) {
-  listData.push({
-    href: "https://www.antdv.com/",
-    title: `ant design vue part ${i}`,
-    avatar: "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
-    description:
-      "Ant Design, a design language for background applications, is refined by Ant UED Team.",
-    content:
-      "We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently."
-  });
-}
+import { ref, computed, onMounted, watch } from "vue";
+import { useRoute } from "vue-router";
+import { useStore } from "vuex";
+import service from "@/utils/request";
+import { message } from "ant-design-vue";
+
 export default {
   components: {
     StarOutlined,
@@ -85,18 +83,41 @@ export default {
     MessageOutlined
   },
   setup() {
+    const store = useStore();
+    const columnAll = computed(() => store.state.columnAll);
+    const articleList = ref([]);
+    const getArticleList = async () => {
+      const { column_id } = route.query;
+      const res = await service.post("/article/list", {
+        page: current.value,
+        column_id: parseInt(column_id, 10)
+      });
+      articleList.value = res;
+    };
+    const current = ref(1);
+    watch(current, () => {
+      getArticleList();
+    });
+
+    const route = useRoute();
+    // fetch the user information when params change
+    onMounted(() => {
+      console.log(route.query);
+      getArticleList();
+    });
+
     let article = ref({
       title: "",
       short: "",
       header_image: "",
       content: "",
-      column_id: 0,
+      column_id: null,
       article_id: 0
     });
     const visible = ref(false);
     const isEdit = ref(false);
     const formTitle = computed(() => {
-      return isEdit.value ? "编辑专栏" : "新增专栏";
+      return isEdit.value ? "编辑文章" : "新增文章";
     });
     const showModal = () => {
       article.value = {
@@ -104,22 +125,23 @@ export default {
         short: "",
         header_image: "",
         content: "",
-        column_id: 0,
+        column_id: null,
         article_id: 0
       };
       isEdit.value = false;
       visible.value = true;
     };
     const handleOK = async () => {
-      //   if (!isEdit.value) {
-      //     await service.post("/column/create", column.value);
-      //     message.success("创建成功");
-      //   } else {
-      //     await service.post("/column/modify", column.value);
-      //     message.success("修改成功");
-      //   }
-      //   await getColumnList(1);
+      if (!isEdit.value) {
+        await service.post("/article/create", article.value);
+        message.success("创建成功");
+      } else {
+        await service.post("/article/modify", article.value);
+        message.success("修改成功");
+      }
+      // await getColumnList(1);
       visible.value = false;
+      console.log(article.value);
     };
     const handleModify = async item => {
       article.value = {
@@ -128,12 +150,13 @@ export default {
         header_image: item.header_image,
         content: item.content,
         column_id: item.column_id,
-        article_id: item.article_id
+        article_id: item.ID
       };
       isEdit.value = true;
       visible.value = true;
     };
     return {
+      columnAll,
       formTitle,
       showModal,
       handleOK,
@@ -142,18 +165,9 @@ export default {
       wrapperCol: { span: 14 },
       visible,
       isEdit,
-      article
-    };
-  },
-  data() {
-    return {
-      listData,
-      pagination: {
-        onChange: page => {
-          console.log(page);
-        },
-        pageSize: 3
-      },
+      article,
+      articleList,
+      current,
       actions: [
         { type: "StarOutlined", text: "156" },
         { type: "LikeOutlined", text: "156" },
