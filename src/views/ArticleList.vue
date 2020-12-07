@@ -5,7 +5,7 @@
         <a-input v-model:value="article.title" />
       </a-form-item>
       <a-form-item label="简介">
-        <a-input v-model:value="article.short" />
+        <a-textarea v-model:value="article.short" />
       </a-form-item>
       <a-form-item label="文章内容(h5格式)">
         <a-textarea v-model:value="article.content" />
@@ -48,7 +48,9 @@
               <span @click="handleModify(item)">修改</span>
             </template>
             <template #extra>
-              <img width="272" alt="logo" :src="item.header_image" />
+              <a @click="pushWithQuery(item.ID)">
+                <img width="272" alt="logo" :src="item.header_image" />
+              </a>
             </template>
             <a-list-item-meta>
               <template #title>
@@ -75,6 +77,7 @@ import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import service from "@/utils/request";
 import { message } from "ant-design-vue";
+import { useRouter } from "vue-router";
 
 export default {
   components: {
@@ -139,7 +142,7 @@ export default {
         await service.post("/article/modify", article.value);
         message.success("修改成功");
       }
-      // await getColumnList(1);
+      await getArticleList();
       visible.value = false;
       console.log(article.value);
     };
@@ -155,6 +158,17 @@ export default {
       isEdit.value = true;
       visible.value = true;
     };
+
+    const router = useRouter();
+    const pushWithQuery = article_id => {
+      router.push({
+        path: "/article/detail",
+        query: {
+          article_id
+        }
+      });
+    };
+
     return {
       columnAll,
       formTitle,
@@ -172,7 +186,8 @@ export default {
         { type: "StarOutlined", text: "156" },
         { type: "LikeOutlined", text: "156" },
         { type: "MessageOutlined", text: "2" }
-      ]
+      ],
+      pushWithQuery
     };
   }
 };

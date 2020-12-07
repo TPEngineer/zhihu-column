@@ -31,6 +31,13 @@
         </a-input>
       </a-form-item>
       <a-form-item>
+        <a-input v-model:value="formInline.email" placeholder="邮箱">
+          <template #prefix
+            ><UserOutlined style="color: rgba(0, 0, 0, 0.25)"
+          /></template>
+        </a-input>
+      </a-form-item>
+      <a-form-item>
         <a-button
           type="primary"
           html-type="submit"
@@ -46,6 +53,7 @@
 <script>
 import { UserOutlined, LockOutlined } from "@ant-design/icons-vue";
 import service from "@/utils/request";
+import { message } from "ant-design-vue";
 export default {
   components: {
     UserOutlined,
@@ -56,13 +64,15 @@ export default {
       formInline: {
         username: "",
         password: "",
-        confirmPassword: ""
+        confirmPassword: "",
+        email: ""
       }
     };
   },
   methods: {
     async handleSubmit() {
       await service.post("/user/signup", this.formInline);
+      message.success("注册成功");
       this.$router.push("/login");
     }
   }

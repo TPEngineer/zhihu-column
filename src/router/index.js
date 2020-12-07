@@ -28,6 +28,11 @@ const routes = [
         component: () => import("../views/ArticleList.vue")
       },
       {
+        path: "/article/detail",
+        name: "articleDetail",
+        component: () => import("../views/Article.vue")
+      },
+      {
         path: "/user/detail",
         name: "Detail",
         component: () =>
@@ -52,7 +57,7 @@ const router = createRouter({
   routes
 });
 
-const whiteList = ["/login", "/home"]; // no redirect whitelist
+const whiteList = ["/login", "/home", "/signup"]; // no redirect whitelist
 
 router.beforeEach(async (to, from, next) => {
   const token = localStorage.getItem("token");
