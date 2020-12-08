@@ -4,7 +4,7 @@
     class="layout"
     :style="{ minHeight: '100vh' }"
   >
-    <a-layout-header style="background: #f0f4f7">
+    <a-layout-header style="background: #f0f2f5">
       <a
         :style="{ float: 'left', fontWeight: 750 }"
         @click="$router.push('/home')"
@@ -47,7 +47,7 @@
       <router-view />
     </a-layout-content>
     <a-layout-footer style="text-align: center">
-      Ant Design ©2018 Created by Ant UED
+      XIN ©2021
     </a-layout-footer>
   </a-layout>
 </template>

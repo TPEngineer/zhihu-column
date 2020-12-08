@@ -3,47 +3,54 @@
     <img src="../assets/callout.svg" alt="callout" width="250" />
   </a-row>
   <h1 style="text-align: center">随心写作，自由表达</h1>
-  <a-row type="flex" justify="center">
-    <a-button type="primary">开始写文章</a-button>
-  </a-row>
 
   <h1 :style="{ textAlign: 'center', marginTop: '72px' }">发现精彩</h1>
-  <a-row :gutter="16">
-    <a-col :span="6">
-      <a-card title="Card title" hoverable>
-        <p>card content</p>
-      </a-card>
-    </a-col>
-    <a-col :span="6">
-      <a-card title="Card title" hoverable>
-        <p>card content</p>
-      </a-card>
-    </a-col>
-    <a-col :span="6">
-      <a-card hoverable>
-        <template #cover>
-          <img
-            alt="example"
-            src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3895225068,1041998716&fm=26&gp=0.jpg"
-          />
-        </template>
+  <a-row type="flex" justify="center">
+    <a-col :md="16">
+      <a-row :gutter="32">
+        <a-col :span="6" v-for="item in discoverList" :key="item.id">
+          <a-card hoverable @click="pushWithQuery(item.id)">
+            <template #cover>
+              <img alt="example" :src="item.cover" />
+            </template>
 
-        <a-card-meta title="Card title" description="This is the description">
-          <template #avatar>
-            <a-avatar
-              src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-            />
-          </template>
-        </a-card-meta>
-      </a-card>
+            <a-card-meta :title="item.title" :description="item.description">
+              <template #avatar>
+                <a-avatar :src="item.author_avatar" />
+              </template>
+            </a-card-meta>
+          </a-card>
+        </a-col>
+      </a-row>
     </a-col>
   </a-row>
 </template>
 <script>
+import service from "@/utils/request";
+import { onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
+
 export default {
-  data() {
+  setup() {
+    const discoverList = ref([]);
+    const getDiscoverList = async () => {
+      const res = await service.post("/column/discover", { page: 1 });
+
+      discoverList.value = res;
+    };
+    onMounted(getDiscoverList);
+    const router = useRouter();
+    const pushWithQuery = column_id => {
+      router.push({
+        path: "/article/list",
+        query: {
+          column_id
+        }
+      });
+    };
     return {
-      selectedKeys: ["2"]
+      discoverList,
+      pushWithQuery
     };
   }
 };

@@ -54,7 +54,7 @@
             </template>
             <a-list-item-meta>
               <template #title>
-                <a>{{ item.title }}</a>
+                <a @click="pushWithQuery(item.ID)">{{ item.title }}</a>
               </template>
             </a-list-item-meta>
             {{ item.short }}
