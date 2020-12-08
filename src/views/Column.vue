@@ -1,5 +1,4 @@
 <template>
-  <a-button type="primary" @click="showModal">新增专栏 </a-button>
   <a-modal v-model:visible="visible" :title="formTitle" @ok="handleOK">
     <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
       <a-form-item label="标题">
@@ -14,29 +13,34 @@
       </a-form-item>
     </a-form>
   </a-modal>
-  <a-row :gutter="16" :style="{ marginTop: '24px' }">
-    <a-col :span="6" v-for="item in columnAll" :key="item.ID">
-      <a-card hoverable>
-        <template #cover>
-          <img
-            alt="example"
-            :src="item.cover"
-            @click="pushWithQuery(item.ID)"
-          />
-        </template>
+  <a-row type="flex" justify="center">
+    <a-col :md="16">
+      <a-button type="primary" @click="showModal">新增专栏 </a-button>
+      <a-row :gutter="16" :style="{ marginTop: '24px' }">
+        <a-col :span="6" v-for="item in columnAll" :key="item.ID">
+          <a-card hoverable>
+            <template #cover>
+              <img
+                alt="example"
+                :src="item.cover"
+                @click="pushWithQuery(item.ID)"
+              />
+            </template>
 
-        <a-card-meta :title="item.title" :description="item.description">
-          <!-- <template #avatar>
+            <a-card-meta :title="item.title" :description="item.description">
+              <!-- <template #avatar>
             <a-avatar
               src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
             />
           </template> -->
-        </a-card-meta>
-        <div style="float: right">
-          <a @click="handleModify(item)">修改</a>
-          <a :style="{ marginLeft: '6px' }">删除</a>
-        </div>
-      </a-card>
+            </a-card-meta>
+            <div style="float: right">
+              <a @click="handleModify(item)">修改</a>
+              <a :style="{ marginLeft: '6px' }">删除</a>
+            </div>
+          </a-card>
+        </a-col>
+      </a-row>
     </a-col>
   </a-row>
 </template>
