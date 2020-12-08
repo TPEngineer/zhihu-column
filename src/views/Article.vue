@@ -1,7 +1,7 @@
 <template>
   <a-row type="flex" justify="center">
     <a-col :md="10">
-      <img alt="logo" :src="article.header_image" />
+      <img alt="logo" :src="article.header_image" :style="{ width: '100%' }" />
       <h1
         :style="{
           fontSize: '24px',
